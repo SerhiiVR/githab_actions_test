@@ -28,7 +28,7 @@ jobs:
           newman run postman/NMS_Admin.postman_collection.json \
           -e postman/Wallets_Env.postman_environment.json \
           --folder "05.2_Lifecycle_E2E" \
-          --env-var baseUrl=${{ secrets.BASE_URL }} \
+          --env-var nmsURL=${{ secrets.BASE_URL }} \
           --env-var userEmail=${{ secrets.USER_EMAIL }} \
           --env-var userPass=${{ secrets.USER_PASS }} \
           --reporters cli,htmlextra \
