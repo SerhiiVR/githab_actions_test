@@ -1,0 +1,2467 @@
+{
+  "info": {
+    "_postman_id": "7e1cd476-1eb4-4d5a-9a6d-8fdb3b70c06f",
+    "name": "NMS Admin",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "13424143"
+  },
+  "item": [
+    {
+      "name": "01_Auth",
+      "item": [
+        {
+          "name": "Log in",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "  pm.response.to.have.status(201);\r",
+                  "\r",
+                  "var response = pm.response.json();\r",
+                  "pm.globals.set(\"NMS_accessToken_global\", response.accessToken);\r",
+                  "pm.globals.set(\"NMS_refreshToken_global\", response.refreshToken);\r",
+                  "});\r",
+                  "//pm.globals.set(\"\")\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{userEmailDeff}}\",\r\n  \"phone\": \"1\",\r\n  \"password\": \"{{userPassDeff}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/auth/login",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Log out",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "// Only try to parse JSON if there is a non-empty body and content-type is JSON\r",
+                  "const contentType = pm.response.headers.get(\"Content-Type\") || \"\";\r",
+                  "const hasBody = pm.response.text().trim().length > 0;\r",
+                  "\r",
+                  "if (hasBody && contentType.toLowerCase().includes(\"application/json\")) {\r",
+                  "    let response;\r",
+                  "    try {\r",
+                  "        response = pm.response.json();\r",
+                  "    } catch (e) {\r",
+                  "        pm.test(\"Response body is valid JSON\", function () {\r",
+                  "            // force a failure so you can see if the backend starts returning invalid JSON\r",
+                  "            throw new Error(\"Invalid JSON in response: \" + e.message);\r",
+                  "        });\r",
+                  "    }\r",
+                  "\r",
+                  "   \r",
+                  "            pm.environment.set(\"NMS_accessToken\", \"\");\r",
+                  "        \r",
+                  "            pm.environment.set(\"NMS_refreshToken\", \"\");\r",
+                  "        \r",
+                  "    \r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://api-gateway.staging.nms-pl.site/auth/logout",
+              "protocol": "https",
+              "host": [
+                "api-gateway",
+                "staging",
+                "nms-pl",
+                "site"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02_Users",
+      "item": [
+        {
+          "name": "get user profile",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{nmsURL}}/users/profile",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "users",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update user profile",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{$randomUserName}}\",\r\n  \"phone\": \"{{$randomPhoneNumber}}\",\r\n  \"avatarId\": \"c1a3f5c2-8b6e-4d6c-9b77-9cfc1b2e2f33\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/users",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reset-password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{userEmailDeff}}\",\r\n  \"phone\": \"1\",\r\n  \"password\": \"{{userPassDeff}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}} /users/reset-password",
+              "host": [
+                "{{nmsURL}} "
+              ],
+              "path": [
+                "users",
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reset-passcode",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{userEmailDeff}}\",\r\n  \"phone\": \"1\",\r\n  \"password\": \"{{userPassDeff}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/users/reset-passcode",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "users",
+                "reset-passcode"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "add passcode",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"passcode\": \"string\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/users/add-passcode",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "users",
+                "add-passcode"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "verify passcode",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"passcode\": \"string\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/users/verify-passcode",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "users",
+                "verify-passcode"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "send-invite",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"string\",\r\n  \"role\": \"user\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/users/verify-passcode",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "users",
+                "verify-passcode"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03_Categories",
+      "item": [
+        {
+          "name": "Create category",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Carss\",\r\n  \"icon\": \"fa-brands fa-github\",\r\n  \"color\": \"#FF5733\",\r\n  \"isPrimary\": false,\r\n  \"type\": \"expense\"\r\n  //\"parentId\": \"2d761129-7ec0-4278-9054-cb932043526a\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/categories",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get primary categories",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "    });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{nmsURL}}/categories?limit=50&page=1&isPrimary=true",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "categories"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "isRoot",
+                  "value": "true",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "isPrimary",
+                  "value": "true"
+                },
+                {
+                  "key": "parentId",
+                  "value": "2d761129-7ec0-4278-9054-cb932043526a",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "income",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "expenses",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete categories by IDs",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"ids\": [\r\n    \"44467e3b-3294-4a3f-a34b-2d120367be15\"\r\n   // \"b71a3f46-eb01-4f19-9bb0-e26c5d719ac2\"\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/categories",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Merge categories",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"sourceCategoryIds\": [\r\n        \"9594995c-45ae-42d7-907f-ecf1cf699585\",\r\n        \"68520e1a-6e34-4f29-b95a-d50828ef4d14\"\r\n    ],\r\n    \"targetCategoryId\": \"5b4af705-845c-41b5-8cd1-c4813583b3c0\",\r\n    \"newSubCategoryData\": {\r\n        \"name\": \"Cars\",\r\n        \"icon\": \"fa-brands fa-github\",\r\n        \"color\": \"#FF5733\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/categories/marge",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "categories",
+                "marge"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{nmsURL}}/categories/2d3039b8-3739-4061-abaa-f2ca2b33e9fd",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "categories",
+                "2d3039b8-3739-4061-abaa-f2ca2b33e9fd"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update category by ID",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Cars\",\r\n  \"icon\": \"fa-brands fa-github\",\r\n  \"color\": \"{{$randomHexColor}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/categories/f8e9d9f2-4b4b-4e6d-9731-8a7818588c34",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "categories",
+                "f8e9d9f2-4b4b-4e6d-9731-8a7818588c34"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Promote category to primary by ID",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"subcategory\": {\r\n    \"name\": \"Subcategory Name\",\r\n    \"icon\": \"fa-subcategory-icon\",\r\n    \"color\": \"#123456\"\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/categories/{id}/promote",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "categories",
+                "{id}",
+                "promote"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Demote primary category into subcategory by ID",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"transferCategories\": [\r\n    {\r\n      \"subcategoryId\": \"f1de63ff-d8ae-4989-a524-4dd73d002dd1\",\r\n      \"newParentCategoryId\": \"a73bfb86-f822-4569-8966-24c5de39b301\"\r\n    }\r\n  ],\r\n  \"targetParentCategoryId\": \"cf35ca99-8245-4f5e-a6ed-5f470cce61d4\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/categories/{id}/demote",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "categories",
+                "{id}",
+                "demote"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Transfer category to another parent category",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"newParentCategoryId\": \"f8e9d9f2-4b4b-4e6d-9731-8a7818588c34\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/categories/{id}/transfer",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "categories",
+                "{id}",
+                "transfer"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reorder category among siblings",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"afterId\": \"beeea01c-b2a4-480b-9eb2-ee540fd8e760\",\r\n    \"beforeId\": \"575c94f4-bce3-4914-82fc-7ac45c12bb40\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/categories/f8e9d9f2-4b4b-4e6d-9731-8a7818588c34/reorder",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "categories",
+                "f8e9d9f2-4b4b-4e6d-9731-8a7818588c34",
+                "reorder"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04_Counterparties",
+      "item": [
+        {
+          "name": "Create a new counterparty",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"ABC Corporation test\",\r\n  \"type\": \"draft\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/counterparties",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "counterparties"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all counterparties for the current user",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{nmsURL}}/counterparties?limit=50&page=1",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "counterparties"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "type": "text"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get a specific counterparty by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{nmsURL}}/counterparties/b3d881f7-5518-441f-9165-07ae65d7b028",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "counterparties",
+                "b3d881f7-5518-441f-9165-07ae65d7b028"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update a counterparty by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Counterpartie ID is present\", function () { \r",
+                  "    pm.expect(pm.response.json().counterpartieID).to.not.be.undefined;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"isArchived\": false,\r\n  \"nip\": \"7890\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/counterparties/{{counterpartieID}}",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "counterparties",
+                "{{counterpartieID}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete a counterparty",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{nmsURL}}/counterparties/{id}",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "counterparties",
+                "{id}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "05_Wallets",
+      "item": [
+        {
+          "name": "05.1_Positive",
+          "item": [
+            {
+              "name": "Create a new wallet",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.environment.set(\"walletID\", pm.response.json().id);\r",
+                      "\r",
+                      "pm.test(\"Response status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "let walletID = pm.environment.get(\"walletID\");\r",
+                      "pm.test(\"Wallet ID is set in environment variables\", function () {\r",
+                      "    pm.expect(walletID).to.not.be.null;\r",
+                      "});\r",
+                      "\r",
+                      "console.log(\"Wallet ID is set in environment variables : \" + walletID);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "pm.variables.set(\"name\", \"Wallet\" + Math.floor(Math.random() * 10000) + 1)"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{name}}\",\r\n  \"icon\": \"fa-wallet\",\r\n  \"currencyId\": \"d3cb2d25-a08d-4a0f-82ed-59b5d24a479a\"\r\n  // не добавляет с счетом\r\n//   \"accounts\": [\r\n//     {\r\n//       \"name\": \"Deutsche Bank1\",\r\n//       \"iban\": \"DE89370400440532013000\",\r\n//       \"balanceInCents\": 12345,\r\n//       \"includeInBudget\": false\r\n//     }\r\n//   ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{nmsURL}}/wallets",
+                  "host": [
+                    "{{nmsURL}}"
+                  ],
+                  "path": [
+                    "wallets"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get all wallets",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{nmsURL}}/wallets?limit=50&page=1&currencyId=d3cb2d25-a08d-4a0f-82ed-59b5d24a479a",
+                  "host": [
+                    "{{nmsURL}}"
+                  ],
+                  "path": [
+                    "wallets"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "currencyId",
+                      "value": "d3cb2d25-a08d-4a0f-82ed-59b5d24a479a"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get a wallet by ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{nmsURL}}/wallets/{{walletID}}",
+                  "host": [
+                    "{{nmsURL}}"
+                  ],
+                  "path": [
+                    "wallets",
+                    "{{walletID}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update a wallet by ID",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "pm.variables.set(\"walletName\", \"WalletNew\" + Math.floor(Math.random() * 10000) + 1);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{walletName}}\",\r\n  \"icon\": \"keyRound\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{nmsURL}}/wallets/{{walletID}}",
+                  "host": [
+                    "{{nmsURL}}"
+                  ],
+                  "path": [
+                    "wallets",
+                    "{{walletID}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete a wallet by ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 200ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"targetWalletId\": \"d3cb2d25-a08d-4a0f-82ed-59b5d24a479a\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{nmsURL}}/wallets/98d56af7-0a6c-4e48-898b-4c9f0abac9aa",
+                  "host": [
+                    "{{nmsURL}}"
+                  ],
+                  "path": [
+                    "wallets",
+                    "98d56af7-0a6c-4e48-898b-4c9f0abac9aa"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "if (!pm.environment.get(\"accessToken\")) {\r",
+                  "\r",
+                  "    console.log(\"Access token not found. Logging in...\");\r",
+                  "\r",
+                  "    pm.sendRequest({\r",
+                  "        url: pm.environment.get(\"nmsURL\") + \"/auth/login\",\r",
+                  "        method: \"POST\",\r",
+                  "        header: {\r",
+                  "            \"Content-Type\": \"application/json\"\r",
+                  "        },\r",
+                  "        body: {\r",
+                  "            mode: \"raw\",\r",
+                  "            raw: JSON.stringify({\r",
+                  "                email: pm.environment.get(\"userEmail\"),\r",
+                  "                password: pm.environment.get(\"userPass\")\r",
+                  "            })\r",
+                  "        }\r",
+                  "    }, function (err, res) {\r",
+                  "\r",
+                  "        if (err) {\r",
+                  "            console.error(\"Login request failed:\", err);\r",
+                  "            throw new Error(\"Login failed\");\r",
+                  "        }\r",
+                  "\r",
+                  "        if (res.code !== 200 && res.code !== 201) {\r",
+                  "            console.error(\"Login unsuccessful. Status:\", res.code);\r",
+                  "            throw new Error(\"Login failed with status \" + res.code);\r",
+                  "        }\r",
+                  "\r",
+                  "        const json = res.json();\r",
+                  "\r",
+                  "        if (!json.accessToken) {\r",
+                  "            throw new Error(\"Access token missing in response\");\r",
+                  "        }\r",
+                  "\r",
+                  "        pm.environment.set(\"accessToken\", json.accessToken);\r",
+                  "\r",
+                  "        console.log(\"Login successful. Token saved.\");\r",
+                  "    });\r",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05.2_Lifecycle_E2E",
+          "item": [
+            {
+              "name": "Create a new wallet",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "console.log(\"Respons 400 : \" + pm.response.text());\r",
+                      "\r",
+                      "const response = pm.response.json();\r",
+                      "\r",
+                      "// Проверяем что ID существует\r",
+                      "pm.test(\"Wallet ID exists\", function () {\r",
+                      "    pm.expect(response.id).to.not.be.undefined;\r",
+                      "});\r",
+                      "\r",
+                      "// Сохраняем ID в environment\r",
+                      "pm.environment.set(\"walletID\", response.id);\r",
+                      "\r",
+                      "console.log(\"Wallet ID saved:\", pm.environment.get(\"walletID\"));"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "let walletName = \"Wallet_\" + Date.now() + \"_\" + Math.floor(Math.random()*1000);\r",
+                      "\r",
+                      "pm.environment.set(\"name\", walletName);\r",
+                      "\r",
+                      "console.log(\"Generated wallet name:\", walletName);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"icon\": \"fa-wallet\",\r\n    \"currencyId\": \"d3cb2d25-a08d-4a0f-82ed-59b5d24a479a\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{nmsURL}}/wallets",
+                  "host": [
+                    "{{nmsURL}}"
+                  ],
+                  "path": [
+                    "wallets"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Create a new wallet",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"{{name}}\",\r\n  \"icon\": \"fa-wallet\",\r\n  \"currencyId\": \"d3cb2d25-a08d-4a0f-82ed-59b5d24a479a\"\r\n  // не добавляет с счетом\r\n//   \"accounts\": [\r\n//     {\r\n//       \"name\": \"Deutsche Bank1\",\r\n//       \"iban\": \"DE89370400440532013000\",\r\n//       \"balanceInCents\": 12345,\r\n//       \"includeInBudget\": false\r\n//     }\r\n//   ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{nmsURL}}/wallets",
+                      "host": [
+                        "{{nmsURL}}"
+                      ],
+                      "path": [
+                        "wallets"
+                      ]
+                    }
+                  },
+                  "_postman_previewlanguage": null,
+                  "header": null,
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            },
+            {
+              "name": "Get all wallets",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{nmsURL}}/wallets?limit=50&page=1&currencyId=d3cb2d25-a08d-4a0f-82ed-59b5d24a479a",
+                  "host": [
+                    "{{nmsURL}}"
+                  ],
+                  "path": [
+                    "wallets"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "currencyId",
+                      "value": "d3cb2d25-a08d-4a0f-82ed-59b5d24a479a"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get a wallet by ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{nmsURL}}/wallets/{{walletID}}",
+                  "host": [
+                    "{{nmsURL}}"
+                  ],
+                  "path": [
+                    "wallets",
+                    "{{walletID}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update a wallet by ID",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "pm.variables.set(\"walletName\", \"WalletNew\" + Math.floor(Math.random() * 10000) + 1);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "let walletID = pm.environment.get(\"walletID\");\r",
+                      "\r",
+                      "if (!walletID) {\r",
+                      "    throw new Error(\"walletID is missing. Create wallet step failed.\");\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{walletName}}\",\r\n  \"icon\": \"keyRound\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{nmsURL}}/wallets/{{walletID}}",
+                  "host": [
+                    "{{nmsURL}}"
+                  ],
+                  "path": [
+                    "wallets",
+                    "{{walletID}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete a wallet by ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "pm.test(\"Response time is less than 200ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+                      "});\r",
+                      "let walletID = pm.environment.get(\"walletID\");\r",
+                      "\r",
+                      "if (!walletID) {\r",
+                      "    throw new Error(\"walletID is missing. Create wallet step failed.\");\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"targetWalletId\": \"d3cb2d25-a08d-4a0f-82ed-59b5d24a479a\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{nmsURL}}/wallets/{{walletID}}",
+                  "host": [
+                    "{{nmsURL}}"
+                  ],
+                  "path": [
+                    "wallets",
+                    "{{walletID}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "**Purpose**  \nThis folder contains the end-to-end workflow for managing wallets in NMS—from authentication to full wallet lifecycle operations.\n\n**What’s included**\n\n- **Authentication:** Log in to obtain access for subsequent calls.\n    \n- **Create:** Create a new wallet.\n    \n- **List:** Retrieve all wallets (with pagination and filtering parameters).\n    \n- **Read:** Get a specific wallet by `{{walletID}}`.\n    \n- **Update:** Update a wallet by `{{walletID}}`.\n    \n- **Delete:** Delete a wallet by `{{walletID}}`.\n    \n\n**How to use**  \nRun the requests in order to execute a complete wallet CRUD cycle. Ensure `{{nmsURL}}` and `{{walletID}}` are set in the active environment (**Wallets Env**) before running the “by ID” requests.",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "if (!pm.environment.get(\"accessToken\")) {\r",
+                  "\r",
+                  "    console.log(\"Access token not found. Logging in...\");\r",
+                  "\r",
+                  "    pm.sendRequest({\r",
+                  "        url: pm.environment.get(\"nmsURL\") + \"/auth/login\",\r",
+                  "        method: \"POST\",\r",
+                  "        header: {\r",
+                  "            \"Content-Type\": \"application/json\"\r",
+                  "        },\r",
+                  "        body: {\r",
+                  "            mode: \"raw\",\r",
+                  "            raw: JSON.stringify({\r",
+                  "                email: pm.environment.get(\"userEmail\"),\r",
+                  "                password: pm.environment.get(\"userPass\")\r",
+                  "            })\r",
+                  "        }\r",
+                  "    }, function (err, res) {\r",
+                  "\r",
+                  "        if (err) {\r",
+                  "            console.error(\"Login request failed:\", err);\r",
+                  "            throw new Error(\"Login failed\");\r",
+                  "        }\r",
+                  "\r",
+                  "        if (res.code !== 200 && res.code !== 201) {\r",
+                  "            console.error(\"Login unsuccessful. Status:\", res.code);\r",
+                  "            throw new Error(\"Login failed with status \" + res.code);\r",
+                  "        }\r",
+                  "\r",
+                  "        const json = res.json();\r",
+                  "\r",
+                  "        if (!json.accessToken) {\r",
+                  "            throw new Error(\"Access token missing in response\");\r",
+                  "        }\r",
+                  "\r",
+                  "        pm.environment.set(\"accessToken\", json.accessToken);\r",
+                  "\r",
+                  "        console.log(\"Login successful. Token saved.\");\r",
+                  "    });\r",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05.99_Negative",
+          "item": [
+            {
+              "name": "Unauthorized",
+              "item": [
+                {
+                  "name": "Create a new wallet",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Response status code is 401\", function () {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.variables.set(\"name\", \"Wallet\" + Math.floor(Math.random() * 10000) + 1);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"{{name}}\",\r\n  \"icon\": \"fa-wallet\",\r\n  \"currencyId\": \"d3cb2d25-a08d-4a0f-82ed-59b5d24a479a\"\r\n  // не добавляет с счетом\r\n//   \"accounts\": [\r\n//     {\r\n//       \"name\": \"Deutsche Bank1\",\r\n//       \"iban\": \"DE89370400440532013000\",\r\n//       \"balanceInCents\": 12345,\r\n//       \"includeInBudget\": false\r\n//     }\r\n//   ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{nmsURL}}/wallets",
+                      "host": [
+                        "{{nmsURL}}"
+                      ],
+                      "path": [
+                        "wallets"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get all wallets",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Response status code is 401\", function () {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{nmsURL}}/wallets?limit=50&page=1&currencyId=d3cb2d25-a08d-4a0f-82ed-59b5d24a479a",
+                      "host": [
+                        "{{nmsURL}}"
+                      ],
+                      "path": [
+                        "wallets"
+                      ],
+                      "query": [
+                        {
+                          "key": "limit",
+                          "value": "50"
+                        },
+                        {
+                          "key": "page",
+                          "value": "1"
+                        },
+                        {
+                          "key": "currencyId",
+                          "value": "d3cb2d25-a08d-4a0f-82ed-59b5d24a479a"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get a wallet by ID",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Response status code is 401\", function () {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{nmsURL}}/wallets/{{walletID}}",
+                      "host": [
+                        "{{nmsURL}}"
+                      ],
+                      "path": [
+                        "wallets",
+                        "{{walletID}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update a wallet by ID",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.variables.set(\"walletName\", \"WalletNew\" + Math.floor(Math.random() * 10000) + 1);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Response status code is 401\", function () {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"{{walletName}}\",\r\n  \"icon\": \"keyRound\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{nmsURL}}/wallets/{{walletID}}",
+                      "host": [
+                        "{{nmsURL}}"
+                      ],
+                      "path": [
+                        "wallets",
+                        "{{walletID}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete a wallet by ID",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Response status code is 401\", function () {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"targetWalletId\": \"d3cb2d25-a08d-4a0f-82ed-59b5d24a479a\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{nmsURL}}/wallets/{{walletID}}",
+                      "host": [
+                        "{{nmsURL}}"
+                      ],
+                      "path": [
+                        "wallets",
+                        "{{walletID}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "auth": {
+                "type": "noauth"
+              },
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [
+                      ""
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [
+                      ""
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Validation",
+              "item": [
+                {
+                  "name": "Invalid input",
+                  "item": [
+                    {
+                      "name": "Create a new wallet",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "exec": [
+                              ""
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        },
+                        {
+                          "listen": "prerequest",
+                          "script": {
+                            "exec": [
+                              ""
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n  \"name\": \"{{name}}\",\r\n  \"icon\": \"{{icon}}\",\r\n  \"currencyId\": \"{{currencyId}}\"\r\n  // не добавляет с счетом\r\n//   \"accounts\": [\r\n//     {\r\n//       \"name\": \"Deutsche Bank1\",\r\n//       \"iban\": \"DE89370400440532013000\",\r\n//       \"balanceInCents\": 12345,\r\n//       \"includeInBudget\": false\r\n//     }\r\n//   ]\r\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{nmsURL}}/wallets",
+                          "host": [
+                            "{{nmsURL}}"
+                          ],
+                          "path": [
+                            "wallets"
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "if (!pm.environment.get(\"accessToken\")) {\r",
+                  "\r",
+                  "    console.log(\"Access token not found. Logging in...\");\r",
+                  "\r",
+                  "    pm.sendRequest({\r",
+                  "        url: pm.environment.get(\"nmsURL\") + \"/auth/login\",\r",
+                  "        method: \"POST\",\r",
+                  "        header: {\r",
+                  "            \"Content-Type\": \"application/json\"\r",
+                  "        },\r",
+                  "        body: {\r",
+                  "            mode: \"raw\",\r",
+                  "            raw: JSON.stringify({\r",
+                  "                email: pm.environment.get(\"userEmail\"),\r",
+                  "                password: pm.environment.get(\"userPass\")\r",
+                  "            })\r",
+                  "        }\r",
+                  "    }, function (err, res) {\r",
+                  "\r",
+                  "        if (err) {\r",
+                  "            console.error(\"Login request failed:\", err);\r",
+                  "            throw new Error(\"Login failed\");\r",
+                  "        }\r",
+                  "\r",
+                  "        if (res.code !== 200 && res.code !== 201) {\r",
+                  "            console.error(\"Login unsuccessful. Status:\", res.code);\r",
+                  "            throw new Error(\"Login failed with status \" + res.code);\r",
+                  "        }\r",
+                  "\r",
+                  "        const json = res.json();\r",
+                  "\r",
+                  "        if (!json.accessToken) {\r",
+                  "            throw new Error(\"Access token missing in response\");\r",
+                  "        }\r",
+                  "\r",
+                  "        pm.environment.set(\"accessToken\", json.accessToken);\r",
+                  "\r",
+                  "        console.log(\"Login successful. Token saved.\");\r",
+                  "    });\r",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{accessToken}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06_Files",
+      "item": [
+        {
+          "name": "/files/presigned-url",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"fileName\": \"profile-picture.png\",\r\n  \"fileType\": \"user_avatar\",\r\n  \"mimeType\": \"image/png\",\r\n  \"fileSize\": 204800\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/files/presigned-url",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "files",
+                "presigned-url"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/files/{id}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{nmsURL}}/files/03febaf2-f308-4907-b4bc-6123a9816198",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "files",
+                "03febaf2-f308-4907-b4bc-6123a9816198"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /files/{id}",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{nmsURL}}/files/03febaf2-f308-4907-b4bc-6123a9816198",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "files",
+                "03febaf2-f308-4907-b4bc-6123a9816198"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /files/lambda-webhook/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/files/lambda-webhook/03febaf2-f308-4907-b4bc-6123a9816198",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "files",
+                "lambda-webhook",
+                "03febaf2-f308-4907-b4bc-6123a9816198"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "07_Accounts",
+      "item": []
+    },
+    {
+      "name": "08_Currencies",
+      "item": [
+        {
+          "name": "Create a new currency",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () { \r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "//pm.variables.set(\"currenciesID\", pm.response.json().id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"code\": \"PLN\",\r\n  \"rate\": 100,\r\n  \"isActive\": true,\r\n  \"rateChangeMode\": \"AUTOMATIC\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/currencies",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "currencies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get currencies",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{nmsURL}}/currencies?limit=50&page=1",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "currencies"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update an existing currency",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Check if the response status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"rate\": 150,\r\n  \"isActive\": true,\r\n  \"rateChangeMode\": \"AUTOMATIC\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/currencies/{{currenciesID}}",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "currencies",
+                "{{currenciesID}}"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "6b154c02-deaf-468d-bba4-ba419a7c9bbb",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get currency by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{nmsURL}}/currencies/{{currenciesID}}",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "currencies",
+                "{{currenciesID}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete currency by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);    \r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{nmsURL}}/currencies/{{currenciesID}}",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "currencies",
+                "{{currenciesID}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "09_Transactions",
+      "item": [
+        {
+          "name": "Create Transaction",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);        \r",
+                  "    });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"type\": \"expense\",\r\n  \"counterpartyId\": \"string\",\r\n  \"accountId\": \"string\",\r\n  \"toCounterpartyId\": \"string\",\r\n  \"name\": \"Grocery shopping\",\r\n  \"amountInCents\": 1000,\r\n  \"status\": \"pending\",\r\n  \"paymentStatus\": \"planned\",\r\n  \"plannedAt\": {},\r\n  \"paymentPurpose\": \"string\",\r\n  \"invoiceNumber\": \"string\",\r\n  \"description\": \"string\",\r\n  \"items\": [\r\n    {\r\n      \"categoryId\": \"string\",\r\n      \"amountInCents\": 0\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/transactions",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Transactions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{nmsURL}}/transactions?limit=50&page=1&accountIds=2e3cd5da-4d63-4e78-923c-05a716e0e932",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "transactions"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "accountIds",
+                  "value": "2e3cd5da-4d63-4e78-923c-05a716e0e932"
+                },
+                {
+                  "key": "accountIds",
+                  "value": "5e172a2f-345e-46de-a190-b5b76816fc44",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": null,
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "counterpartyIds",
+                  "value": null,
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": null,
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "paymentStatus",
+                  "value": "planned",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Transactions dashboard KPIs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{nmsURL}}/transactions/dashboard",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "transactions",
+                "dashboard"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Transaction by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "    });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{nmsURL}}/transactions/13ba9a29-d53a-49ba-aab1-2b06ece78408",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "transactions",
+                "13ba9a29-d53a-49ba-aab1-2b06ece78408"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Transaction by ID",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  //\"type\": \"transfer\",\r\n  \"amountInCents\": 10005\r\n  //\"accountId\": \"2e3cd5da-4d63-4e78-923c-05a716e0e932\",\r\n  //\"toAccountId\": \"e6d69a0f-deb0-4786-ab18-113ed7f18a76\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/transactions/97f54f06-ff72-485f-a726-f66c10f1d144",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "transactions",
+                "97f54f06-ff72-485f-a726-f66c10f1d144"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "99_Negative",
+      "item": [
+        {
+          "name": "Create a new currency 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 409\", function () { \r",
+                  "    pm.response.to.have.status(409);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"code\": \"EUR\",\r\n  \"rate\": 100,\r\n  \"isActive\": true,\r\n  \"rateChangeMode\": \"AUTOMATIC\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{nmsURL}}/currencies",
+              "host": [
+                "{{nmsURL}}"
+              ],
+              "path": [
+                "currencies"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{NMS_accessToken_global}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
