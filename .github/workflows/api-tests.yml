@@ -1,0 +1,41 @@
+name: Postman API tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  run-api-tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Newman
+        run: npm install -g newman newman-reporter-htmlextra
+
+      - name: Run Postman collection
+        run: |
+          newman run postman/NMS_Admin.postman_collection.json \
+          -e postman/Wallets_Env.postman_environment.json \
+          --folder "05.2_Lifecycle_E2E" \
+          --env-var baseUrl=${{ secrets.BASE_URL }} \
+          --env-var userEmail=${{ secrets.USER_EMAIL }} \
+          --env-var userPass=${{ secrets.USER_PASS }} \
+          --reporters cli,htmlextra \
+          --reporter-htmlextra-export report.html
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-report
+          path: report.html
